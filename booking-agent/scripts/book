@@ -1,0 +1,38 @@
+#!/bin/bash
+set -eu
+
+echo
+echo "Getting latest concourse version..."
+set +e
+fly -t concourse login --concourse-url=$CONCOURSE_URL --team-name=$CONCOURSE_TEAM --username=$CONCOURSE_USERNAME --password=$CONCOURSE_PASSWORD --insecure # Required to set initial target
+set -e
+fly -t concourse sync
+
+echo
+echo "Logging into Concourse..."
+fly -t concourse login --concourse-url=$CONCOURSE_URL --team-name=$CONCOURSE_TEAM --username=$CONCOURSE_USERNAME --password=$CONCOURSE_PASSWORD --insecure
+
+echo
+echo "Booking your pipeline..."
+fly -t concourse sp -n -p $PIPELINE_NAME -c $PIPELINE_MANIFEST --var pipelines_version=$PIPELINES_VERSION -l $PIPELINE_VARS_STORE
+
+echo
+echo "Exposing pipeline status..."
+fly -t concourse ep -p $PIPELINE_NAME
+
+echo
+echo "Setting pipeline version..."
+if grep "pipelines_version" "$PIPELINE_MANIFEST" > /dev/null; then
+  if [ -z ${PIPELINES_VERSION+x} ]; then
+    echo "Version set to $PIPELINES_VERSION"
+    fly -t concourse cr -r $PIPELINE_NAME/pipelines --from tag:$PIPELINES_VERSION
+  else
+    echo "Pipeline version not detected, using latest from master"
+  fi
+fi
+
+if [ "$UNPAUSE_PIPELINE" = true ]; then
+  echo
+  echo "Unpausing pipeline..."
+  fly -t concourse up -p $PIPELINE_NAME
+fi

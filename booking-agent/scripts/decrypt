@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+gpg --version
+echo
+echo "Importing GPG key..."
+echo -e "$GPG_KEY" | gpg --verbose --allow-secret-key-import --import > /dev/null 2>&1
+echo
+
+echo
+echo "Unlocking repository..."
+pushd deployments-encrypted > /dev/null
+git-crypt unlock
+popd
+
+cp -fr deployments-encrypted/. deployments
