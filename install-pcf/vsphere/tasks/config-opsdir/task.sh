@@ -90,7 +90,7 @@ network_configuration=$(
               "availability_zone_names": ($infra_availability_zones | split(","))
             }
           ]
-        },
+        }
       ]
     }'
 )
