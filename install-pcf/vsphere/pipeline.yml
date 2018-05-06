@@ -9,9 +9,8 @@ resources:
 - name: pcf-pipelines
   type: git
   source:
-    uri: git@github.com:pivotal-cf/pcf-pipelines.git
+    uri: https://github.com/matthewcosgrove/pcf-pipelines
     branch: master
-    private_key: {{git_private_key}}
 
 - name: pcf-ops-manager
   type: pivnet
@@ -105,36 +104,9 @@ jobs:
       INFRA_NW_DNS: {{infra_nw_dns}}
       INFRA_NW_GATEWAY: {{infra_nw_gateway}}
       INFRA_NW_AZS: {{infra_nw_azs}}
-      DEPLOYMENT_NETWORK_NAME: {{deployment_network_name}}
-      DEPLOYMENT_VCENTER_NETWORK: {{deployment_vsphere_network}}
-      DEPLOYMENT_NW_CIDR: {{deployment_nw_cidr}}
-      DEPLOYMENT_EXCLUDED_RANGE: {{deployment_excluded_range}}
-      DEPLOYMENT_NW_DNS: {{deployment_nw_dns}}
-      DEPLOYMENT_NW_GATEWAY: {{deployment_nw_gateway}}
-      DEPLOYMENT_NW_AZS: {{deployment_nw_azs}}
-      SERVICES_NETWORK_NAME: {{services_network_name}}
-      SERVICES_VCENTER_NETWORK: {{services_vsphere_network}}
-      SERVICES_NW_CIDR: {{services_nw_cidr}}
-      SERVICES_EXCLUDED_RANGE: {{services_excluded_range}}
-      SERVICES_NW_DNS: {{services_nw_dns}}
-      SERVICES_NW_GATEWAY: {{services_nw_gateway}}
-      SERVICES_NW_AZS: {{services_nw_azs}}
-      DYNAMIC_SERVICES_NETWORK_NAME: {{dynamic_services_network_name}}
-      DYNAMIC_SERVICES_VCENTER_NETWORK: {{dynamic_services_vsphere_network}}
-      DYNAMIC_SERVICES_NW_CIDR: {{dynamic_services_nw_cidr}}
-      DYNAMIC_SERVICES_EXCLUDED_RANGE: {{dynamic_services_excluded_range}}
-      DYNAMIC_SERVICES_NW_DNS: {{dynamic_services_nw_dns}}
-      DYNAMIC_SERVICES_NW_GATEWAY: {{dynamic_services_nw_gateway}}
-      DYNAMIC_SERVICES_NW_AZS: {{dynamic_services_nw_azs}}
       AZ_1: {{az_1_name}}
       AZ_1_CLUSTER_NAME: {{az_1_cluster_name}}
       AZ_1_RP_NAME: {{az_1_rp_name}}
-      AZ_2: {{az_2_name}}
-      AZ_2_CLUSTER_NAME: {{az_2_cluster_name}}
-      AZ_2_RP_NAME: {{az_2_rp_name}}
-      AZ_3: {{az_3_name}}
-      AZ_3_CLUSTER_NAME: {{az_3_cluster_name}}
-      AZ_3_RP_NAME: {{az_3_rp_name}}
       NTP_SERVERS: {{ntp_servers}}
       OPS_DIR_HOSTNAME: {{ops_dir_hostname}}
       ENABLE_VM_RESURRECTOR: {{enable_vm_resurrector}}
@@ -233,8 +205,8 @@ jobs:
       OPS_MGR_USR: {{opsman_admin_username}}
       OPS_MGR_PWD: {{opsman_admin_password}}
       ERT_SINGLETON_JOB_AZ: {{ert_singleton_job_az}}
-      DEPLOYMENT_NW_AZS: {{deployment_nw_azs}}
-      NETWORK_NAME: {{deployment_network_name}}
+      DEPLOYMENT_NW_AZS: {{infra_nw_azs}}
+      NETWORK_NAME: {{infra_network_name}}
       ENABLE_SECURITY_EVENT_LOGGING: {{enable_security_event_logging}}
       SYSLOG_HOST: {{syslog_host}}
       SYSLOG_PORT: {{syslog_port}}
@@ -243,22 +215,14 @@ jobs:
       COMPANY_NAME: {{company_name}}
       AUTHENTICATION_MODE: {{authentication_mode}}
       LOGGREGATOR_ENDPOINT_PORT: {{loggregator_endpoint_port}}
-      POE_SSL_NAME1: {{poe_ssl_name1}}
-      POE_SSL_CERT1: {{poe_ssl_cert1}}
-      POE_SSL_KEY1: {{poe_ssl_key1}}
-      POE_SSL_NAME2: {{poe_ssl_name2}}
-      POE_SSL_CERT2: {{poe_ssl_cert2}}
-      POE_SSL_KEY2: {{poe_ssl_key2}}
-      POE_SSL_NAME3: {{poe_ssl_name3}}
-      POE_SSL_CERT3: {{poe_ssl_cert3}}
-      POE_SSL_KEY3: {{poe_ssl_key3}}
+      SSL_CERT: {{ssl_cert}}
+      SSL_PRIVATE_KEY: {{ssl_private_key}}
       SAML_SSL_CERT: {{saml_ssl_cert}}
       SAML_SSL_PRIVATE_KEY: {{saml_ssl_private_key}}
       HAPROXY_FORWARD_TLS: {{haproxy_forward_tls}}
       HAPROXY_BACKEND_CA: {{haproxy_backend_ca}}
       ROUTER_TLS_CIPHERS: {{router_tls_ciphers}}
       HAPROXY_TLS_CIPHERS: {{haproxy_tls_ciphers}}
-      FRONTEND_IDLE_TIMEOUT: {{frontend_idle_timeout}}
       DISABLE_HTTP_PROXY: {{disable_http_proxy}}
       TCP_ROUTING: {{tcp_routing}}
       TCP_ROUTING_PORTS: {{tcp_routing_ports}}
@@ -291,7 +255,10 @@ jobs:
       DISABLE_INSECURE_COOKIES: {{disable_insecure_cookies}}
       ROUTER_STATIC_IPS: {{router_static_ips}}
       ROUTER_REQUEST_TIMEOUT_IN_SEC: {{router_request_timeout_in_seconds}}
+      GARDEN_NETWORK_POOL_CIDR: {{garden_network_pool_cidr}}
+      GARDEN_NETWORK_MTU: {{garden_network_mtu}}
       MYSQL_MONITOR_EMAIL: {{mysql_monitor_email}}
+      MYSQL_BACKUPS: {{mysql_backups}}
       ALLOW_APP_SSH_ACCESS: {{allow_app_ssh_access}}
       TCP_ROUTER_STATIC_IPS: {{tcp_router_static_ips}}
       SSH_STATIC_IPS: {{ssh_static_ips}}
@@ -313,11 +280,9 @@ jobs:
       DIEGO_BRAIN_INSTANCES: {{diego_brain_instances}}
       DIEGO_CELL_INSTANCES: {{diego_cell_instances}}
       DOPPLER_INSTANCES: {{doppler_instances}}
-      LOGGREGATOR_TRAFFICCONTROLLER_INSTANCES: {{loggregator_trafficcontroller_instances}}
+      LOGGREGATOR_TC_INSTANCES: {{loggregator_traffic_controller_instances}}
       TCP_ROUTER_INSTANCES: {{tcp_router_instances}}
       SYSLOG_ADAPTER_INSTANCES: {{syslog_adapter_instances}}
-      SYSLOG_SCHEDULER_INSTANCES: {{syslog_scheduler_instances}}
-      CREDHUB_INSTANCES: {{credhub_instances}}
       INTERNET_CONNECTED: {{internet_connected}}
       CONTAINER_NETWORKING_NW_CIDR: {{container_networking_nw_cidr}}
       TCP_ROUTER_NSX_SECURITY_GROUP: {{tcp_router_nsx_security_group}}
@@ -340,15 +305,6 @@ jobs:
       MYSQL_NSX_LB_POOL_NAME: {{mysql_nsx_lb_pool_name}}
       MYSQL_NSX_LB_SECURITY_GROUP: {{mysql_nsx_lb_security_group}}
       MYSQL_NSX_LB_PORT: {{mysql_nsx_lb_port}}
-      ROUTING_TLS_TERMINATION: {{routing_tls_termination}}
-      ROUTING_CUSTOM_CA_CERTIFICATES: {{routing_custom_ca_certificates}}
-      CREDUB_ENCRYPTION_KEY_NAME1: {{credhub_encryption_key_name1}}
-      CREDUB_ENCRYPTION_KEY_SECRET1: {{credhub_encryption_key_secret1}}
-      CREDUB_ENCRYPTION_KEY_NAME2: {{credhub_encryption_key_name2}}
-      CREDUB_ENCRYPTION_KEY_SECRET2: {{credhub_encryption_key_secret2}}
-      CREDUB_ENCRYPTION_KEY_NAME3: {{credhub_encryption_key_name3}}
-      CREDUB_ENCRYPTION_KEY_SECRET3: {{credhub_encryption_key_secret3}}
-      CREDHUB_PRIMARY_ENCRYPTION_NAME: {{credhub_primary_encryption_name}}
       HA_PROXY_LB_NAME: ""
       HAPROXY_FLOATING_IPS: ""
       OPSMAN_CLIENT_ID: ""
